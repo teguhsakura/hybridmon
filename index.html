@@ -11,16 +11,6 @@
     <meta name="author" content="Teguh Sakura (teguh.sakura@yahoo.com)">
     <title>Hybrid Inverter Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js"></script>
-    
-    <!-- Apple Touch Icons -->
-    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="./icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180x180.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="./icons/icon-167x167.png">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="./icons/icon-192x192.png">
-    
     <style>
         :root { 
             --blue: #0077be; 
@@ -140,15 +130,15 @@
         .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
         .val { font-weight: bold; color: #000; }
 
-        #pv-box { top: -10px; left: 13%; }
-        #grid-box { top: -10px; right: 13%; }
-        #bat-box { bottom: -350px; left: 13%; }
-        #load-box { bottom: -350px; right: 13%; }
+        #pv-box { top: -20px; left: -15%; }
+        #grid-box { top: -20px; right: -15%; }
+        #bat-box { bottom: 100px; left: -15%; }
+        #load-box { bottom: 100px; right: -15%; }
 
         .inverter-center { 
-            position: absolute; top: 80%; left: 50%; 
+            position: absolute; top: 40%; left: 50%; 
             transform: translate(-50%, -50%); 
-            width: 600px; text-align: center; z-index: 5;
+            width: 500px; text-align: center; z-index: 5;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
@@ -169,7 +159,7 @@
 
 
         /* --- FOOTER INFO --- */
-        .footer-wrapper { width: 100%; max-width: 800px; margin-top: 950px; padding: 20px; box-sizing: border-box; }
+        .footer-wrapper { width: 100%; max-width: 800px; margin-top: 495px; padding: 20px; box-sizing: border-box; }
         .section-info-extended {
             display: flex; justify-content: space-around; background: white; 
             border: 2px solid var(--blue); border-radius: 15px; padding: 15px; 
@@ -219,7 +209,7 @@
     </div>
 
     <div class="info-box" id="grid-box">
-        <h4>AC Charge Information</h4>
+        <h4>AC Information</h4>
         <div class="row"><span>AC Voltage:</span><span class="val" id="gridacvolt">--</span></div>
         <div class="row"><span>AC Freq:</span><span class="val" id="gridacfreq">--</span></div>
         <div class="row"><span>AC Power:</span><span class="val" id="gridacpower">--</span></div>
