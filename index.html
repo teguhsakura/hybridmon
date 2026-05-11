@@ -203,8 +203,8 @@
     <div class="info-box" id="pv-box">
         <h4>PV Information</h4>
         <div class="row"><span>Voltage:</span><span class="val" id="pvvolt">--</span></div>
-        <div class="row"><span>Current:</span><span class="val" id="pvcurrent">--</span></div>
-        <div class="row"><span>Power:</span><span class="val" id="pvpower">--</span></div>
+        <div class="row"><span>Current:</span><span class="val" id="batcurrent">--</span></div>
+        <div class="row"><span>Power:</span><span class="val" id="batpower">--</span></div>
         <div class="row"><span>Energy:</span><span class="val" id="energytoday">--</span></div>
     </div>
 
@@ -303,8 +303,8 @@
                 updateTime(); // Update waktu saat data masuk
                 
                 document.getElementById('pvvolt').innerText = data.pvvolt + " V";
-                document.getElementById('pvcurrent').innerText = data.pvcurrent + " A";
-                document.getElementById('pvpower').innerText = data.pvpower + " W";
+                document.getElementById('batcurrent').innerText = data.batcurrent + " A";
+                document.getElementById('batpower').innerText = data.batpower + " W";
                 document.getElementById('energytoday').innerText = data.energytoday + " kWh";
                 document.getElementById('gridacvolt').innerText = data.gridacvolt + " V";
                 document.getElementById('gridacfreq').innerText = data.gridacfreq + " Hz";
