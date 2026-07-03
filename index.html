@@ -169,7 +169,6 @@
             stroke-width: 4;
             stroke-linecap: round;
             stroke-dasharray: 10, 15;
-            animation: dash 1.5s linear infinite;
             display: none;
         }
 
@@ -182,7 +181,7 @@
         .overlay-text {
             position: absolute;
             top: 70%;
-            left: 48%;
+            left: 47%;
             transform: translate(-50%, -50%);
             text-align: center;
             z-index: 7;
@@ -276,11 +275,11 @@
             <svg class="flow-svg" viewBox="0 0 500 520">
                 <path id="path-pv" class="flow-line" d="M 70 180 L 70 280 L 170 280" />
                 
-                <path id="path-grid" class="flow-line" d="M 400 180 L 400 290 L 290 290" />
+                <path id="path-grid" class="flow-line" d="M 400 165 L 400 285 L 290 285" />
                 
-                <path id="path-battery" class="flow-line" d="M 215 315 L 120 315 L 120 410" />
+                <path id="path-battery" class="flow-line" d="M 170 315 L 70 315 L 70 420" />
                 
-                <path id="path-load" class="flow-line" d="M 290 315 L 400 315 L 400 410" />
+                <path id="path-load" class="flow-line" d="M 290 315 L 400 315 L 400 375" />
             </svg>
 
             <div class="overlay-text">
@@ -332,7 +331,7 @@
 
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <div style="flex: 1; background: white; border: 2px solid var(--blue); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.85rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-                    🌡️ <b>Heatsink Temp:</b> <span id="heatsinktemp">--</span>°C
+                    │🌡️ <b>Heatsink Temp:</b> <span id="heatsinktemp">--</span>°C
                 </div>
                 <div style="flex: 1; background: white; border: 2px solid var(--blue); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.85rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     ⚠️ <b>Alert Status:</b> <span id="warningstatus" style="font-weight: bold; color: var(--green);">None</span>
@@ -410,37 +409,48 @@
             const pathBattery = document.getElementById('path-battery');
             const pathLoad = document.getElementById('path-load');
 
+            // --- Logika Aliran Jalur PV ---
             if (pvPower > 10) {
                 pathPv.style.display = "block";
                 pathPv.style.stroke = "#00e5ff"; 
+                pathPv.style.animation = "dash 1.5s linear infinite";
             } else {
                 pathPv.style.display = "none";
             }
 
+            // --- Logika Aliran Jalur Grid (Selalu Muncul, Bergerak jika ada daya masuk) ---
+            pathGrid.style.display = "block";
+            pathGrid.style.stroke = "#ff9100"; 
             if (gridPower > 10) {
-                pathGrid.style.display = "block";
-                pathGrid.style.stroke = "#ff9100"; 
+                pathGrid.style.animation = "dash 1.5s linear infinite"; // Bergerak
             } else {
-                pathGrid.style.display = "none";
+                pathGrid.style.animation = "none"; // Diam Statis Siku
             }
 
+            // --- Logika Aliran Jalur Load ---
             if (loadPercent > 1) {
                 pathLoad.style.display = "block";
                 pathLoad.style.stroke = "#28a745"; 
+                pathLoad.style.animation = "dash 1.5s linear infinite";
             } else {
                 pathLoad.style.display = "none";
             }
 
+            // --- Logika Aliran Jalur Baterai (Selalu Muncul, Menyesuaikan Kondisi) ---
+            pathBattery.style.display = "block";
+            
             if (batStatus.includes("charge") && !batStatus.includes("disch")) {
-                pathBattery.style.display = "block";
-                pathBattery.style.animation = "dash 1.5s linear infinite"; 
+                // Mengisi baterai (Aliran ke bawah)
                 pathBattery.style.stroke = "#28a745";
-            } else if (batStatus.includes("discharge") || pvPower < 5 && loadPercent > 0 && gridPower < 5) {
-                pathBattery.style.display = "block";
-                pathBattery.style.animation = "dash 1.5s linear infinite reverse"; 
+                pathBattery.style.animation = "dash 1.5s linear infinite"; 
+            } else if (batStatus.includes("discharge") || (pvPower < 5 && loadPercent >= 1 && gridPower < 5)) {
+                // Menggunakan baterai / Kondisi Malam Hari (PV=0W) & Load >= 1% (Aliran ke atas)
                 pathBattery.style.stroke = "#dc3545"; 
+                pathBattery.style.animation = "dash 1.5s linear infinite reverse"; 
             } else {
-                pathBattery.style.display = "none";
+                // Jika tidak ada aktifitas charge/discharge, garis tetap muncul statis siku (diam)
+                pathBattery.style.stroke = "#00e5ff"; // Warna default standby atau sesuaikan ke hijau/biru
+                pathBattery.style.animation = "none"; // Diam Statis Siku
             }
         }
 
