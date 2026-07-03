@@ -403,13 +403,27 @@
             const gridPower = parseFloat(data.gridacpower) || 0;
             const loadPercent = parseFloat(data.loadpercen) || 0;
             const batStatus = data.batstatus ? data.batstatus.toLowerCase() : "";
+            const machineType = data.machinetype ? data.machinetype.toString().trim() : "";
 
             const pathPv = document.getElementById('path-pv');
             const pathGrid = document.getElementById('path-grid');
             const pathBattery = document.getElementById('path-battery');
             const pathLoad = document.getElementById('path-load');
 
-            // --- Logika Aliran Jalur PV ---
+            // --- 1. LOGIKA EKSTRAKSI MODEL & ESTIMASI DAYA OUTPUT ---
+            let inverterVA = 0;
+            let estimatedLoadWatt = 0;
+
+            if (machineType && machineType.length >= 2) {
+                // Mengambil 2 angka pertama di depan model
+                const prefix = parseInt(machineType.substring(0, 2)) || 0;
+                inverterVA = prefix * 100; // Misal 30 -> 3000 VA
+                
+                // Estimasi Watt = (Persentase Load / 100) * Kapasitas VA
+                estimatedLoadWatt = (loadPercent / 100) * inverterVA;
+            }
+
+            // --- 2. LOGIKA ALIRAN JALUR PV ---
             if (pvPower > 10) {
                 pathPv.style.display = "block";
                 pathPv.style.stroke = "#00e5ff"; 
@@ -418,16 +432,16 @@
                 pathPv.style.display = "none";
             }
 
-            // --- Logika Aliran Jalur Grid (Selalu Muncul, Bergerak jika ada daya masuk) ---
+            // --- 3. LOGIKA ALIRAN JALUR GRID ---
             pathGrid.style.display = "block";
             pathGrid.style.stroke = "#ff9100"; 
             if (gridPower > 10) {
-                pathGrid.style.animation = "dash 1.5s linear infinite"; // Bergerak
+                pathGrid.style.animation = "dash 1.5s linear infinite"; 
             } else {
-                pathGrid.style.animation = "none"; // Diam Statis Siku
+                pathGrid.style.animation = "none"; 
             }
 
-            // --- Logika Aliran Jalur Load ---
+            // --- 4. LOGIKA ALIRAN JALUR LOAD ---
             if (loadPercent > 1) {
                 pathLoad.style.display = "block";
                 pathLoad.style.stroke = "#28a745"; 
@@ -436,21 +450,37 @@
                 pathLoad.style.display = "none";
             }
 
-            // --- Logika Aliran Jalur Baterai (Selalu Muncul, Menyesuaikan Kondisi) ---
+            // --- 5. LOGIKA BARU ALIRAN JALUR BATERAI (BERDASARKAN PV VS ESTIMASI BEBAN) ---
             pathBattery.style.display = "block";
-            
-            if (batStatus.includes("charge") && !batStatus.includes("disch")) {
-                // Mengisi baterai (Aliran ke bawah)
-                pathBattery.style.stroke = "#28a745";
-                pathBattery.style.animation = "dash 1.5s linear infinite"; 
-            } else if (batStatus.includes("discharge") || (pvPower < 5 && loadPercent >= 1 && gridPower < 5)) {
-                // Menggunakan baterai / Kondisi Malam Hari (PV=0W) & Load >= 1% (Aliran ke atas)
-                pathBattery.style.stroke = "#dc3545"; 
-                pathBattery.style.animation = "dash 1.5s linear infinite reverse"; 
+
+            // Jika ada produksi PV, perbandingannya menggunakan matematika PV vs Estimasi Beban
+            if (pvPower > 10) {
+                if (pvPower > estimatedLoadWatt) {
+                    // PV > Beban (Baterai di-charge, animasi normal ke arah baterai)
+                    pathBattery.style.stroke = "#28a745";
+                    pathBattery.style.animation = "dash 1.5s linear infinite"; 
+                } else if (pvPower < estimatedLoadWatt) {
+                    // PV < Beban (Baterai bantu backup, animasi reverse ke arah inverter)
+                    pathBattery.style.stroke = "#dc3545"; 
+                    pathBattery.style.animation = "dash 1.5s linear infinite reverse"; 
+                } else {
+                    // PV == Beban (Daya seimbang pas-pasan, garis siku diam)
+                    pathBattery.style.stroke = "#00e5ff";
+                    pathBattery.style.animation = "none";
+                }
             } else {
-                // Jika tidak ada aktifitas charge/discharge, garis tetap muncul statis siku (diam)
-                pathBattery.style.stroke = "#00e5ff"; // Warna default standby atau sesuaikan ke hijau/biru
-                pathBattery.style.animation = "none"; // Diam Statis Siku
+                // JIKA PV TIDAK ADA (MALAM HARI / PV = 0W)
+                // Mengikuti logika standar discharge/charge berdasarkan MQTT atau Load aktif
+                if (batStatus.includes("charge") && !batStatus.includes("disch")) {
+                    pathBattery.style.stroke = "#28a745";
+                    pathBattery.style.animation = "dash 1.5s linear infinite"; 
+                } else if (batStatus.includes("discharge") || (loadPercent >= 1 && gridPower < 5)) {
+                    pathBattery.style.stroke = "#dc3545"; 
+                    pathBattery.style.animation = "dash 1.5s linear infinite reverse"; 
+                } else {
+                    pathBattery.style.stroke = "#00e5ff"; 
+                    pathBattery.style.animation = "none";
+                }
             }
         }
 
