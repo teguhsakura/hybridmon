@@ -275,7 +275,7 @@
             <svg class="flow-svg" viewBox="0 0 500 520">
                 <path id="path-pv" class="flow-line" d="M 70 180 L 70 280 L 170 280" />
                 
-                <path id="path-grid" class="flow-line" d="M 400 165 L 400 285 L 290 285" />
+                <path id="path-grid" class="flow-line" d="M 400 165 L 400 280 L 290 280" />
                 
                 <path id="path-battery" class="flow-line" d="M 170 315 L 70 315 L 70 420" />
                 
@@ -400,6 +400,7 @@
 
         function manageEnergyAnimations(data) {
             const pvPower = parseFloat(data.batpower) || 0;
+            const pvVoltage = parseFloat(data.pvvolt) || 0;
             const gridPower = parseFloat(data.gridacpower) || 0;
             const loadPercent = parseFloat(data.loadpercen) || 0;
             const batStatus = data.batstatus ? data.batstatus.toLowerCase() : "";
@@ -423,21 +424,30 @@
                 estimatedLoadWatt = (loadPercent / 100) * inverterVA;
             }
 
-            // --- 2. LOGIKA ALIRAN JALUR PV ---
-            if (pvPower > 10) {
+            // --- 2. LOGIKA ALIRAN JALUR PV (PERBAIKAN) ---
+            // Jalur PV akan tetap MUNCUL jika ada tegangan dari panel (siang hari), walaupun baterai penuh (0 Watt)
+            if (pvVoltage > 10) {
                 pathPv.style.display = "block";
                 pathPv.style.stroke = "#00e5ff"; 
-                pathPv.style.animation = "dash 1.5s linear infinite";
-            } else {
-                pathPv.style.display = "none";
+                
+                // Animasi HANYA BERGERAK jika ada daya masuk di atas 10W
+                if (pvPower > 10) {
+                    pathPv.style.strokeDasharray = "10, 15";
+                    pathPv.style.animation = "dash 1.5s linear infinite";
+                } else {
+                    pathPv.style.strokeDasharray = "none";
+                    pathPv.style.animation = "none"; // Baterai penuh / stanby = jalur muncul tapi diam
+                }
             }
 
             // --- 3. LOGIKA ALIRAN JALUR GRID ---
             pathGrid.style.display = "block";
             pathGrid.style.stroke = "#ff9100"; 
             if (gridPower > 10) {
+                pathGrid.style.strokeDasharray = "10, 15";
                 pathGrid.style.animation = "dash 1.5s linear infinite"; 
             } else {
+                pathGrid.style.strokeDasharray = "none";
                 pathGrid.style.animation = "none"; 
             }
 
@@ -469,8 +479,7 @@
                     pathBattery.style.animation = "none";
                 }
             } else {
-                // JIKA PV TIDAK ADA (MALAM HARI / PV = 0W)
-                // Mengikuti logika standar discharge/charge berdasarkan MQTT atau Load aktif
+                // JIKA PV TIDAK ADA ATAU PV SEBAGAI STANDBY (MALAM HARI / BATERAI PENUH PV = 0W)
                 if (batStatus.includes("charge") && !batStatus.includes("disch")) {
                     pathBattery.style.stroke = "#28a745";
                     pathBattery.style.animation = "dash 1.5s linear infinite"; 
