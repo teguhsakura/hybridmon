@@ -20,6 +20,7 @@
             --text: #333;
             --green: #28a745;
             --red: #dc3545;
+            --flow-color: #00e5ff;
         }
 
         body {
@@ -35,10 +36,7 @@
         /* --- STYLE POP-UP MODAL --- */
         #modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7);
             display: flex;
             justify-content: center;
@@ -67,13 +65,8 @@
 
         .modal-content button {
             background: var(--blue);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
+            color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%;
         }
 
         /* --- STYLE HEADER & STATUS BOX --- */
@@ -104,28 +97,10 @@
             color: #666;
         }
 
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .dot {
-            height: 10px;
-            width: 10px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .dot-offline {
-            background-color: var(--red);
-            box-shadow: 0 0 5px var(--red);
-        }
-
-        .dot-online {
-            background-color: var(--green);
-            box-shadow: 0 0 8px var(--green);
-        }
+        .status-item { display: flex; align-items: center; gap: 6px; }
+        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
+        .dot-offline { background-color: var(--red); box-shadow: 0 0 5px var(--red); }
+        .dot-online { background-color: var(--green); box-shadow: 0 0 8px var(--green); }
 
         /* --- STYLE DASHBOARD CONTAINER --- */
         .container {
@@ -150,58 +125,67 @@
             box-sizing: border-box;
         }
 
-        .info-box h4 {
-            margin: 0 0 10px 0;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
-            color: var(--blue);
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .val {
-            font-weight: bold;
-            color: #000;
-        }
+        .info-box h4 { margin: 0 0 10px 0; border-bottom: 2px solid #eee; padding-bottom: 5px; color: var(--blue); }
+        .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .val { font-weight: bold; color: #000; }
 
         #pv-box { top: -20px; left: -15%; }
         #grid-box { top: -20px; right: -15%; }
         #bat-box { bottom: 100px; left: -15%; }
         #load-box { bottom: 100px; right: -15%; }
 
-        /* --- STYLE GAMBAR INVERTER CENTRAL --- */
+        /* --- STYLE AREA CENTRAL INVERTER --- */
         .inverter-center {
             position: absolute;
             top: 40%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 500px;
+            height: 520px;
             text-align: center;
             z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
         .inverter-center img {
             width: 100%;
-            height: auto;
-            max-width: 100%;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+        }
+
+        /* --- KUNCI ANIMASI LAYER ALIRAN LISTRIK SVG --- */
+        .flow-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .flow-line {
+            fill: none;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 10, 15;
+            animation: dash 1.5s linear infinite;
+            display: none;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -50;
+            }
         }
 
         .overlay-text {
             position: absolute;
-            top: 65%;
-            left: 50%;
+            top: 70%;
+            left: 48%;
             transform: translate(-50%, -50%);
             text-align: center;
-            z-index: 6;
+            z-index: 7;
             width: 100%;
             display: flex;
             flex-direction: column;
@@ -221,139 +205,33 @@
         }
 
         /* --- STYLE ENERGY LEDGER --- */
-        .energy-container {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .energy-card {
-            flex: 1;
-            background: white;
-            border: 2px solid var(--blue);
-            border-radius: 12px;
-            padding: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .card-title {
-            font-weight: bold;
-            font-size: 0.95rem;
-            color: var(--blue);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-
-        .energy-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-bottom: 4px;
-            color: #555;
-        }
-
-        .energy-val {
-            font-weight: bold;
-            color: #000;
-        }
-
-        .cost-box {
-            margin-top: 8px;
-            padding-top: 5px;
-            border-top: 1px dashed #ddd;
-        }
-
-        .cost-val {
-            font-weight: bold;
-            color: var(--green);
-        }
+        .energy-container { display: flex; gap: 15px; margin-bottom: 15px; }
+        .energy-card { flex: 1; background: white; border: 2px solid var(--blue); border-radius: 12px; padding: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card-title { font-weight: bold; font-size: 0.95rem; color: var(--blue); border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 8px; text-align: center; }
+        .energy-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 4px; color: #555; }
+        .energy-val { font-weight: bold; color: #000; }
+        .cost-box { margin-top: 8px; padding-top: 5px; border-top: 1px dashed #ddd; }
+        .cost-val { font-weight: bold; color: var(--green); }
 
         /* --- FOOTER INFO --- */
-        .footer-wrapper {
-            width: 100%;
-            max-width: 800px;
-            margin-top: 495px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .section-info-extended {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            border: 2px solid var(--blue);
-            border-radius: 15px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        /* Tombol Ganti Klien */
-        .btn-change-client {
-            background: #f1f3f5;
-            border: 1px solid #ced4da;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--blue);
-            margin-top: 3px;
-            display: inline-block;
-            transition: 0.2s;
-        }
-        .btn-change-client:hover {
-            background: var(--blue);
-            color: white;
-            border-color: var(--blue);
-        }
-
-        .footer-credit {
-            text-align: center;
-            line-height: 1.6;
-            font-size: 13px;
-            color: var(--blue);
-        }
-
-        .footer-credit a {
-            text-decoration: none;
-            font-weight: bold;
-        }
+        .footer-wrapper { width: 100%; max-width: 800px; margin-top: 495px; padding: 20px; box-sizing: border-box; }
+        .section-info-extended { display: flex; justify-content: space-around; background: white; border: 2px solid var(--blue); border-radius: 15px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .btn-change-client { background: #f1f3f5; border: 1px solid #ced4da; padding: 2px 8px; border-radius: 12px; font-size: 11px; cursor: pointer; font-weight: bold; color: var(--blue); margin-top: 3px; display: inline-block; }
+        .footer-credit { text-align: center; line-height: 1.6; font-size: 13px; color: var(--blue); }
+        .footer-credit a { text-decoration: none; font-weight: bold; }
 
         /* --- RESPONSIVE MOBILE SIZING --- */
         @media (max-width: 600px) {
-            .container {
-                transform: scale(0.85);
-                height: 500px;
-                margin-top: -20px;
-            }
-            
-            .info-box {
-                width: 160px;
-                font-size: 0.8rem;
-            }
-
-            #pv-box { left: -5%; }
-            #grid-box { right: -5%; }
-            #bat-box { left: -5%; }
-            #load-box { right: -5%; }
-
-            .energy-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .footer-wrapper {
-                margin-top: 790px;
-            }
+            .container { transform: scale(0.85); height: 500px; margin-top: -20px; }
+            .info-box { width: 160px; font-size: 0.8rem; }
+            #pv-box { left: -5%; } #grid-box { right: -5%; } #bat-box { bottom: 100px; left: -5%; } #load-box { bottom: 100px; right: -5%; }
+            .energy-container { flex-direction: column; gap: 10px; }
+            .footer-wrapper { margin-top: 790px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- POP-UP MODAL ACCESS -->
     <div id="modal-overlay">
         <div class="modal-content">
             <h3>Client Access</h3>
@@ -363,7 +241,6 @@
         </div>
     </div>
 
-    <!-- HEADER STATUS MONITORING -->
     <div class="header-container">
         <div class="main-title">Inverter Hybrid Dashboard</div>
         <div class="status-bar">
@@ -377,35 +254,41 @@
         </div>
     </div>
 
-    <!-- UTAMA: DIAGRAM AREA -->
     <div class="container">
         
-        <!-- PV Box -->
         <div class="info-box" id="pv-box">
-            <h4>PV Information</h4>
+            <h4>DC Charge Information</h4>
             <div class="row"><span>PV Voltage:</span><span class="val" id="pvvolt">--</span></div>
             <div class="row"><span>Charge Current:</span><span class="val" id="batcurrent">--</span></div>
             <div class="row"><span>Charge Power:</span><span class="val" id="batpower">--</span></div>
         </div>
 
-        <!-- AC Box -->
         <div class="info-box" id="grid-box">
-            <h4>AC Information</h4>
+            <h4>AC / Grid Charge Information</h4>
             <div class="row"><span>AC Voltage:</span><span class="val" id="gridacvolt">--</span></div>
             <div class="row"><span>AC Freq:</span><span class="val" id="gridacfreq">--</span></div>
             <div class="row"><span>AC Power:</span><span class="val" id="gridacpower">--</span></div>
         </div>
 
-        <!-- Inverter Center Image Graphic -->
         <div class="inverter-center">
-            <img src="https://raw.githubusercontent.com/teguhsakura/hybridmon/refs/heads/main/INVERTER_HYBRID_GUI.png" alt="Inverter">
+            <img src="https://raw.githubusercontent.com/teguhsakura/hybridmon/refs/heads/main/INVERTER_HYBRID_GUI_NEW.png" alt="Inverter">
+            
+            <svg class="flow-svg" viewBox="0 0 500 520">
+                <path id="path-pv" class="flow-line" d="M 70 180 L 70 280 L 170 280" />
+                
+                <path id="path-grid" class="flow-line" d="M 400 180 L 400 290 L 290 290" />
+                
+                <path id="path-battery" class="flow-line" d="M 215 315 L 120 315 L 120 410" />
+                
+                <path id="path-load" class="flow-line" d="M 290 315 L 400 315 L 400 410" />
+            </svg>
+
             <div class="overlay-text">
                 <div class="machine-label">Model: <span id="machinetype">--</span></div>
-                <div style="font-size: 11px; color: #666; margin-top: 5px; font-weight: bold;" id="operatingmode">Mode: --</div>
+                <div style="font-size: 11px; color: #444; margin-top: 5px; font-weight: bold;" id="operatingmode">Mode: --</div>
             </div>
         </div>
 
-        <!-- Battery Box -->
         <div class="info-box" id="bat-box">
             <h4>Battery Info</h4>
             <div class="row"><span>Voltage:</span><span class="val" id="batvolt">--</span></div>
@@ -413,46 +296,40 @@
             <div class="row"><span>Status:</span><span class="val" id="batstatus">--</span></div>
         </div>
 
-        <!-- Load Box -->
         <div class="info-box" id="load-box">
-            <h4>Load Information</h4>
+            <h4>AC Load Information</h4>
             <div class="row"><span>Voltage:</span><span class="val" id="invertervolt">--</span></div>
             <div class="row"><span>Load:</span><span class="val" id="loadpercen">--</span></div>
             <div class="row"><span>Freq:</span><span class="val" id="inverterfreq">--</span></div>
         </div>
 
-        <!-- FOOTER: SUMMARY ENERGY, LEDGER, & METRICS -->
         <div class="footer-wrapper">
-            
             <h4 style="text-align: center; color: var(--blue); margin: 0 0 15px 0; font-size: 1.1rem;">Energy & Cost</h4>
             
             <div class="energy-container">
-                <!-- Solar / PV Generation Card -->
                 <div class="energy-card">
                     <div class="card-title">☀️ Solar Generation</div>
                     <div class="energy-row"><span>Hari Ini:</span><span class="energy-val" id="energytoday">-- kWh</span></div>
                     <div class="energy-row"><span>Bulan Ini:</span><span class="energy-val" id="energymonth">-- kWh</span></div>
                     <div class="energy-row"><span>Total:</span><span class="energy-val" id="energytotal">-- kWh</span></div>
                     <div class="cost-box">
-                        <div class="energy-row"><span>Biaya (Bln):</span><span class="cost-val" id="monthcost">Rp --</span></div>
-                        <div class="energy-row"><span>Biaya (Tot):</span><span class="cost-val" id="totalcost">Rp --</span></div>
+                        <div class="energy-row"><span>Biaya (Bulan ini):</span><span class="cost-val" id="monthcost">Rp --</span></div>
+                        <div class="energy-row"><span>Biaya (Total):</span><span class="cost-val" id="totalcost">Rp --</span></div>
                     </div>
                 </div>
 
-                <!-- AC / Grid Input Card -->
                 <div class="energy-card">
-                    <div class="card-title">🔌 AC / Grid Input</div>
+                    <div class="card-title">🔌 AC / Grid Charge</div>
                     <div class="energy-row"><span>Hari Ini:</span><span class="energy-val" id="energyactoday">-- kWh</span></div>
                     <div class="energy-row"><span>Bulan Ini:</span><span class="energy-val" id="energyacmonth">-- kWh</span></div>
                     <div class="energy-row"><span>Total:</span><span class="energy-val" id="energyactotal">-- kWh</span></div>
                     <div class="cost-box">
-                        <div class="energy-row"><span>Biaya (Bln):</span><span class="cost-val" id="monthcostac">Rp --</span></div>
-                        <div class="energy-row"><span>Biaya (Tot):</span><span class="cost-val" id="totalcostac">Rp --</span></div>
+                        <div class="energy-row"><span>Biaya (Bulan ini):</span><span class="cost-val" id="monthcostac">Rp --</span></div>
+                        <div class="energy-row"><span>Biaya (Total):</span><span class="cost-val" id="totalcostac">Rp --</span></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Heatsink Temp & Alerts -->
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <div style="flex: 1; background: white; border: 2px solid var(--blue); border-radius: 8px; padding: 8px; text-align: center; font-size: 0.85rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                     🌡️ <b>Heatsink Temp:</b> <span id="heatsinktemp">--</span>°C
@@ -462,7 +339,6 @@
                 </div>
             </div>
 
-            <!-- Network Parameters & Client Manager -->
             <section class="section-info-extended">
                 <div style="flex: 1; text-align: center; border-right: 1px solid #eee; padding: 0 5px;">
                     <div style="font-weight: bold; font-size: 13px; color: #333;">📡 Monitoring Client ID:</div>
@@ -479,7 +355,6 @@
                 </div>
             </section>
 
-            <!-- Copyright and Links -->
             <section class="footer-credit">
                 <b>Teguh Sakura</b>&trade; <br>
                 &#9993; <b>teguh.sakura@yahoo.com</b><br>
@@ -489,59 +364,84 @@
         </div>
     </div>
 
-    <!-- REAL-TIME DATA HANDLING USING MQTT INTERFACE -->
     <script>
         const MQTT_BROKER = "wss://broker.emqx.io:8084/mqtt"; 
         let client;
 
-        // SISTEM AUTO-LOAD MEMORI SAAT HALAMAN DIBUKA
         window.onload = function() {
             const savedClientID = localStorage.getItem('mon_client_id');
             if (savedClientID) {
-                // Jika data ID tersimpan ditemukan, langsung bypass modal dan hubungkan MQTT
                 document.getElementById('modal-overlay').style.display = 'none';
                 document.getElementById('active-client-id').innerText = savedClientID;
                 connectMQTT(`mppt_techfine_samoto_amsan/${savedClientID}/alldata`);
             }
         };
 
-        function handleKeyPress(e) {
-            if (e.key === 'Enter') startMonitoring();
-        }
+        function handleKeyPress(e) { if (e.key === 'Enter') startMonitoring(); }
 
         function startMonitoring() {
             const clientID = document.getElementById('client-name').value.trim();
-            if (clientID === "") { 
-                alert("Harap masukkan nama klien!"); 
-                return; 
-            }
-            // Simpan ID baru ke memori lokal browser
+            if (clientID === "") { alert("Harap masukkan nama klien!"); return; }
             localStorage.setItem('mon_client_id', clientID);
-            
             document.getElementById('active-client-id').innerText = clientID;
             document.getElementById('modal-overlay').style.display = 'none';
-            
-            const DYNAMIC_TOPIC = `mppt_techfine_samoto_amsan/${clientID}/alldata`;
-            connectMQTT(DYNAMIC_TOPIC);
+            connectMQTT(`mppt_techfine_samoto_amsan/${clientID}/alldata`);
         }
 
-        // FUNGSI UNTUK TOMBOL GANTI KLIEN DI BAWAH
         function changeClient() {
-            // Putuskan koneksi MQTT aktif saat ini jika ada
-            if (client) {
-                client.end();
-            }
-            // Ambil ID lama untuk ditaruh di input box pop-up sebagai default text
-            const currentID = localStorage.getItem('mon_client_id') || "";
-            document.getElementById('client-name').value = currentID;
-            
-            // Tampilkan kembali modal akses
+            if (client) client.end();
+            document.getElementById('client-name').value = localStorage.getItem('mon_client_id') || "";
             document.getElementById('modal-overlay').style.display = 'flex';
         }
 
         function updateTime() {
             const now = new Date();
             document.getElementById('last-update').innerText = now.toLocaleTimeString('id-ID');
+        }
+
+        function manageEnergyAnimations(data) {
+            const pvPower = parseFloat(data.batpower) || 0;
+            const gridPower = parseFloat(data.gridacpower) || 0;
+            const loadPercent = parseFloat(data.loadpercen) || 0;
+            const batStatus = data.batstatus ? data.batstatus.toLowerCase() : "";
+
+            const pathPv = document.getElementById('path-pv');
+            const pathGrid = document.getElementById('path-grid');
+            const pathBattery = document.getElementById('path-battery');
+            const pathLoad = document.getElementById('path-load');
+
+            if (pvPower > 10) {
+                pathPv.style.display = "block";
+                pathPv.style.stroke = "#00e5ff"; 
+            } else {
+                pathPv.style.display = "none";
+            }
+
+            if (gridPower > 10) {
+                pathGrid.style.display = "block";
+                pathGrid.style.stroke = "#ff9100"; 
+            } else {
+                pathGrid.style.display = "none";
+            }
+
+            if (loadPercent > 1) {
+                pathLoad.style.display = "block";
+                pathLoad.style.stroke = "#28a745"; 
+            } else {
+                pathLoad.style.display = "none";
+            }
+
+            if (batStatus.includes("charge") && !batStatus.includes("disch")) {
+                pathBattery.style.display = "block";
+                pathBattery.style.animation = "dash 1.5s linear infinite"; 
+                pathBattery.style.stroke = "#28a745";
+            } else if (batStatus.includes("discharge") || pvPower < 5 && loadPercent > 0 && gridPower < 5) {
+                pathBattery.style.display = "block";
+                pathBattery.style.animation = "dash 1.5s linear infinite reverse"; 
+                pathBattery.style.stroke = "#dc3545"; 
+            } else {
+                pathBattery.style.display = "none";
+            }
         }
 
         function connectMQTT(topic) {
@@ -564,8 +464,8 @@
                 try {
                     const data = JSON.parse(message.toString());
                     updateTime();
+                    manageEnergyAnimations(data);
                                     
-                    // Box Kiri Atas & Kanan Atas
                     document.getElementById('pvvolt').innerText = data.pvvolt + " V";
                     document.getElementById('batcurrent').innerText = data.batcurrent + " A";
                     document.getElementById('batpower').innerText = data.batpower + " W";
@@ -573,11 +473,9 @@
                     document.getElementById('gridacfreq').innerText = data.gridacfreq + " Hz";
                     document.getElementById('gridacpower').innerText = data.gridacpower + " W";
                     
-                    // Box Tengah (Inverter Overlay)
                     document.getElementById('machinetype').innerText = data.machinetype;
                     document.getElementById('operatingmode').innerText = "Mode: " + data.operatingmode;
                     
-                    // Box Kiri Bawah & Kanan Bawah
                     document.getElementById('batvolt').innerText = data.batvolt + " V";
                     document.getElementById('batcap').innerText = data.batcap + " %";
                     document.getElementById('batstatus').innerText = data.batstatus;
@@ -585,32 +483,26 @@
                     document.getElementById('loadpercen').innerText = data.loadpercen + " %";
                     document.getElementById('inverterfreq').innerText = data.inverterfreq + " Hz";
                     
-                    // Sisi Solar / PV Generation Ledger
                     document.getElementById('energytoday').innerText = data.energytoday + " kWh";
                     document.getElementById('energymonth').innerText = data.energymonth + " kWh";
                     document.getElementById('energytotal').innerText = data.energytotal + " kWh";
                     document.getElementById('monthcost').innerText = "Rp " + parseFloat(data.monthcost).toLocaleString('id-ID');
                     document.getElementById('totalcost').innerText = "Rp " + parseFloat(data.totalcost).toLocaleString('id-ID');
 
-                    // Sisi AC / Grid Input Ledger
                     document.getElementById('energyactoday').innerText = data.energyactoday + " kWh";
                     document.getElementById('energyacmonth').innerText = data.energyacmonth + " kWh";
                     document.getElementById('energyactotal').innerText = data.energyactotal + " kWh";
                     document.getElementById('monthcostac').innerText = "Rp " + parseFloat(data.monthcostac).toLocaleString('id-ID');
                     document.getElementById('totalcostac').innerText = "Rp " + parseFloat(data.totalcostac).toLocaleString('id-ID');
 
-                    // Sistem Suhu Internasional & Penanganan Alert Inverter
                     document.getElementById('heatsinktemp').innerText = data.heatsinktemp;
                     const alertElement = document.getElementById('warningstatus');
                     alertElement.innerText = data.warningstatus;
                     alertElement.style.color = data.warningstatus.toLowerCase() === "none" ? "var(--green)" : "var(--red)";
 
-                    // Network Parameters Footer Box
                     document.getElementById('sinyalwifi').innerText = data.sinyalwifi + " dBm";
                     document.getElementById('alamatip').innerText = data.alamatip;
-                } catch (e) { 
-                    console.error("Gagal parse JSON", e); 
-                }
+                } catch (e) { console.error("Gagal parse JSON", e); }
             });
         }
     </script>
