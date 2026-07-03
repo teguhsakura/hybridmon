@@ -234,7 +234,7 @@
     <div id="modal-overlay">
         <div class="modal-content">
             <h3>Client Access</h3>
-            <p>Masukkan Nama Klien/ID:</p>
+            <p>Masukkan Nama Klien:</p>
             <input type="text" id="client-name" placeholder="Contoh: hybrid.techfine.021" onkeypress="handleKeyPress(event)">
             <button onclick="startMonitoring()">Buka Dashboard</button>
         </div>
@@ -340,7 +340,7 @@
 
             <section class="section-info-extended">
                 <div style="flex: 1; text-align: center; border-right: 1px solid #eee; padding: 0 5px;">
-                    <div style="font-weight: bold; font-size: 13px; color: #333;">📡 Monitoring Client ID:</div>
+                    <div style="font-weight: bold; font-size: 13px; color: #333;">📡 Nama Klien:</div>
                     <div id="active-client-id" style="font-size: 14px; font-weight: bold; color: var(--blue); margin-top: 4px;">---</div>
                     <button class="btn-change-client" onclick="changeClient()">📝 Ganti Klien</button>
                 </div>
@@ -424,30 +424,35 @@
                 estimatedLoadWatt = (loadPercent / 100) * inverterVA;
             }
 
-            // --- 2. LOGIKA ALIRAN JALUR PV (PERBAIKAN) ---
-            // Jalur PV akan tetap MUNCUL jika ada tegangan dari panel (siang hari), walaupun baterai penuh (0 Watt)
+            // --- 2. LOGIKA ALIRAN JALUR PV ---
             if (pvVoltage > 10) {
                 pathPv.style.display = "block";
-                pathPv.style.stroke = "#00e5ff"; 
+                pathPv.style.stroke = "#00e5ff";
                 
                 // Animasi HANYA BERGERAK jika ada daya masuk di atas 10W
                 if (pvPower > 10) {
                     pathPv.style.strokeDasharray = "10, 15";
                     pathPv.style.animation = "dash 1.5s linear infinite";
                 } else {
-                    pathPv.style.strokeDasharray = "none";
-                    pathPv.style.animation = "none"; // Baterai penuh / stanby = jalur muncul tapi diam
+                    pathPv.style.display = "block";
+                    pathPv.style.stroke = "#00e5ff";
+                    pathPv.style.animation = "none";
                 }
+            } else {
+               pathPv.style.display = "block";
+               pathPv.style.stroke = "#00e5ff"; 
+               pathPv.style.animation = "none"; 
             }
 
             // --- 3. LOGIKA ALIRAN JALUR GRID ---
             pathGrid.style.display = "block";
-            pathGrid.style.stroke = "#ff9100"; 
+            pathGrid.style.stroke = "#ff9100";
             if (gridPower > 10) {
                 pathGrid.style.strokeDasharray = "10, 15";
-                pathGrid.style.animation = "dash 1.5s linear infinite"; 
+                pathGrid.style.animation = "dash 1.5s linear infinite";
             } else {
-                pathGrid.style.strokeDasharray = "none";
+                pathGrid.style.display = "block";
+                pathGrid.style.stroke = "#ff9100";
                 pathGrid.style.animation = "none"; 
             }
 
@@ -457,7 +462,9 @@
                 pathLoad.style.stroke = "#28a745"; 
                 pathLoad.style.animation = "dash 1.5s linear infinite";
             } else {
-                pathLoad.style.display = "none";
+                pathLoad.style.display = "block";
+                pathLoad.style.stroke = "#28a745"; 
+                pathLoad.style.animation = "none"
             }
 
             // --- 5. LOGIKA BARU ALIRAN JALUR BATERAI (BERDASARKAN PV VS ESTIMASI BEBAN) ---
