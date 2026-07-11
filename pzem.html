@@ -302,7 +302,8 @@
         <div class="info-box" id="load-box">
             <h4>AC Load Information</h4>
             <div class="row"><span>Voltage:</span><span class="val" id="invertervolt">--</span></div>
-            <div class="row"><span>Power / Load:</span><span class="val" id="loadpercen">--</span></div>
+            <div class="row"><span>Daya:</span><span class="val" id="pzempower">--</span></div>
+            <div class="row"><span>Load:</span><span class="val" id="loadpercen">--</span></div>
             <div class="row"><span>Freq:</span><span class="val" id="inverterfreq">--</span></div>
             <div class="row"><span>Power Factor:</span><span class="val" id="pzempf">--</span></div>
         </div>
@@ -589,9 +590,10 @@
 
                         // Merubah Box AC Load dengan parameter dari PZEM
                         document.getElementById('invertervolt').innerText = data.pzemvolt + " V";
-                        document.getElementById('loadpercen').innerText = data.pzempower + " W (" + terakhirLoadPercen + "%)";
+                        document.getElementById('pzempower').innerText = data.pzempower + " W";
+                        document.getElementById('loadpercen').innerText = terakhirLoadPercen + " %";
                         document.getElementById('inverterfreq').innerText = data.pzemfreq + " Hz";
-                        document.getElementById('pzempf').innerText = data.pzempf;
+                        document.getElementById('pzempf').innerText = data.pzempf + " °";
 
                         // Mengisi data pada Box "PZEM AC"
                         document.getElementById('pzemenergytoday').innerText = data.pzemenergytoday + " kWh";
