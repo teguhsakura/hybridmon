@@ -383,6 +383,7 @@
         const MQTT_BROKER = "wss://broker.emqx.io:8084/mqtt"; 
         let client;
         let currentClientID = "";
+        let terakhirLoadPercen = "--";
 
         window.onload = function() {
             const savedClientID = localStorage.getItem('mon_client_id');
@@ -537,6 +538,7 @@
                     // MENGELOLA DATA BERDASARKAN TOPIC YANG MASUK
                     if (topic.endsWith('/alldata')) {
                         manageEnergyAnimations(data);
+                        terakhirLoadPercen = data.loadpercen;
                                                     
                         document.getElementById('pvvolt').innerText = data.pvvolt + " V";
                         document.getElementById('batcurrent').innerText = data.batcurrent + " A";
@@ -587,7 +589,7 @@
 
                         // Merubah Box AC Load dengan parameter dari PZEM
                         document.getElementById('invertervolt').innerText = data.pzemvolt + " V";
-                        document.getElementById('loadpercen').innerText = data.pzempower + " W"; // Ditampilkan dalam Watt sesuai PZEM
+                        document.getElementById('loadpercen').innerText = data.pzempower + " W (" + terakhirLoadPercen + "%)";
                         document.getElementById('inverterfreq').innerText = data.pzemfreq + " Hz";
                         document.getElementById('pzempf').innerText = data.pzempf;
 
