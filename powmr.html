@@ -417,6 +417,7 @@ function updateAnimations() {
     const pvPower = (parseFloat(state.pv_power_total) || 0);
     const acVoltage = (parseFloat(state.ac_input_voltage) || 0);
     const loadPercent = (parseFloat(state.load_percent) || 0);
+    const loadPower = (parseFloat(state.output_active_power) || 0);
     const chargePower = (parseFloat(state.battery_charge_power) || 0);
     const dischargePower = (parseFloat(state.battery_discharge_power) || 0);
 
@@ -430,15 +431,18 @@ function updateAnimations() {
     pathPv.style.stroke = "#00e5ff";
     pathPv.style.animation = (pvPower > 10) ? "dash 1.5s linear infinite" : "none";
 
-    // AC Input / Grid
+    // AC Input / Grid: Gerak hanya jika PLN terhubung, ada daya beban, 
+    // DAN daya beban melebihi PV serta melebihi daya Discharge baterai
+    const isAcSupplementing = (acVoltage > 100) && (loadPower > 10) && (loadPower > pvPower) && (loadPower > dischargePower);
+
     pathGrid.style.display = "block";
     pathGrid.style.stroke = "#ff9100";
-    pathGrid.style.animation = (acVoltage > 100) ? "dash 1.5s linear infinite" : "none";
+    pathGrid.style.animation = isAcSupplementing ? "dash 1.5s linear infinite" : "none";
 
     // Load
     pathLoad.style.display = "block";
     pathLoad.style.stroke = "#28a745";
-    pathLoad.style.animation = (loadPercent > 1) ? "dash 1.5s linear infinite" : "none";
+    pathLoad.style.animation = (loadPercent > 1 || loadPower > 10) ? "dash 1.5s linear infinite" : "none";
 
     // Battery: charge = hijau maju, discharge = merah reverse
     pathBattery.style.display = "block";
